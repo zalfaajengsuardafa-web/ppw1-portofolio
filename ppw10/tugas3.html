@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cek Bilangan</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffe4ec, #ffd6e8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #5a3e4d;
+        }
+        .box {
+            background: rgba(255, 182, 193, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #ff6f91;
+            margin-bottom: 15px;
+        }
+        #hasil {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>💗 Cek Perbandingan Bilangan</h2>
+    <p id="hasil">Menunggu input...</p>
+</div>
+
+<script>
+    let a = parseInt(prompt("Masukkan bilangan pertama:"));
+    let b = parseInt(prompt("Masukkan bilangan kedua:"));
+
+    let hasilText = "";
+
+    if (a > b) {
+        hasilText = "Bilangan ke-1 lebih besar dari bilangan ke-2";
+    } else if (a < b) {
+        hasilText = "Bilangan ke-2 lebih besar dari bilangan ke-1";
+    } else {
+        hasilText = "Kedua bilangan sama besar";
+    }
+
+    // tampilkan hasil ke halaman (pink)
+    document.getElementById("hasil").innerHTML = hasilText;
+
+    // tetap tampilkan alert biar sesuai soal
+    alert(hasilText);
+</script>
+
+</body>
+</html>
