@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Form Pendaftaran Seminar</title>
+</head>
+
+<body style="background-color:#f1f3f4; font-family:Arial;">
+
+<center>
+
+<!-- Gambar di atas form -->
+<img src="bg.png" width="700">
+
+<br><br>
+
+<form style="background:white; width:700px; padding:20px; 
+text-align:left; border-radius:10px;">
+
+<h2>Form Pendaftaran Seminar Nasional</h2>
+<p>Silakan isi data dengan lengkap.</p>
+
+<!-- Gambar di dalam form -->
+<img src="bg.png" width="660">
+<br><br>
+
+<fieldset>
+<legend>Data Pribadi</legend>
+
+Nama Lengkap:<br>
+<input type="text" size="80" required autofocus><br><br>
+
+Username:<br>
+<input type="text" size="80" required><br><br>
+
+Email:<br>
+<input type="email" size="80" required><br><br>
+
+Password:<br>
+<input type="password" size="80" required><br><br>
+
+Nomor HP:<br>
+<input type="tel" size="80" placeholder="08xxxxxxxxxx"><br><br>
+
+Tanggal Lahir:<br>
+<input type="date"><br><br>
+
+Waktu Daftar:<br>
+<input type="time"><br><br>
+
+Bulan Masuk Kuliah:<br>
+<input type="month"><br><br>
+
+Minggu Akademik:<br>
+<input type="week"><br><br>
+
+Jenis Kelamin:<br>
+<input type="radio" name="jk"> Laki-laki
+<input type="radio" name="jk"> Perempuan
+<br><br>
+
+Status Kewarganegaraan:<br>
+<input type="text" value="Indonesia" readonly><br><br>
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Pendidikan</legend>
+
+Program Studi:
+<select>
+<optgroup label="Fakultas Teknik">
+<option>Informatika</option>
+<option>Sistem Informasi</option>
+<option>Teknologi Rekayasa Perangkat Lunak</option>
+</optgroup>
+
+<optgroup label="Fakultas Sains">
+<option>Ilmu Komputer</option>
+<option>Matematika</option>
+</optgroup>
+</select>
+<br><br>
+
+Semester:
+<input type="number" min="1" max="14"><br><br>
+
+IPK:
+<input type="range" min="0" max="4" step="0.1"><br><br>
+
+Cari Kampus:
+<input type="search"><br><br>
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Minat & Preferensi</legend>
+
+Topik yang diminati:<br>
+<input type="checkbox"> Artificial Intelligence<br>
+<input type="checkbox"> Web Development<br>
+<input type="checkbox"> Data Science<br>
+<input type="checkbox"> Cyber Security<br><br>
+
+Warna Favorit:
+<input type="color"><br><br>
+
+Upload Bukti Pembayaran:
+<input type="file"><br><br>
+
+Website Pribadi:
+<input type="url" size="80"><br><br>
+
+Pilih Kota:
+<input list="kota">
+<datalist id="kota">
+<option value="Yogyakarta">
+<option value="Jakarta">
+<option value="Bandung">
+<option value="Surabaya">
+</datalist>
+<br><br>
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Perhitungan Biaya</legend>
+
+Biaya Seminar:
+<input type="number" value="150000" disabled><br><br>
+
+Diskon:
+<input type="number" value="50000"><br><br>
+
+Total:
+<output>100000</output>
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Saran</legend>
+
+<textarea rows="5" cols="90" placeholder="Tulis saran Anda..."></textarea>
+
+</fieldset>
+
+<br>
+
+<input type="submit" value="Daftar">
+<input type="reset" value="Reset">
+
+</form>
+
+</center>
+
+</body>
+</html>
