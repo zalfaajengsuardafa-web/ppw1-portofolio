@@ -1,0 +1,515 @@
+/* ============================================================
+   dimsum.css
+   Hero Slider + Transparent-to-Solid Header
+   Compatible dengan Figma → HTML implementation
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ── RESET & VARIABLES ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --red:        #c0392b;
+  --red-dark:   #922b21;
+  --gold:       #c9a84c;
+  --dark:       #1a1a1a;
+  --white:      #ffffff;
+  --header-h:   72px;          /* tinggi header — sesuaikan di Figma */
+  --transition: 0.35s ease;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+a    { text-decoration: none; color: inherit; }
+ul   { list-style: none; }
+img  { max-width: 100%; display: block; }
+
+
+/* ============================================================
+   HEADER — Transparan di atas hero, solid saat scroll
+   ============================================================ */
+
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: var(--header-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+
+  /* mulai transparan */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+
+  /* animasi smooth saat scroll */
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+/* State: sudah di-scroll → header solid putih */
+.header.scrolled {
+  background: var(--white);
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo */
+.header__logo img {
+  height: 46px;
+  object-fit: contain;
+  /* logo putih saat transparan */
+  filter: brightness(0) invert(1);
+  transition: filter var(--transition);
+}
+
+.header.scrolled .header__logo img {
+  /* logo normal (berwarna) saat sudah solid */
+  filter: none;
+}
+
+/* Teks fallback logo */
+.header__logo-text {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  transition: color var(--transition);
+}
+
+.header.scrolled .header__logo-text {
+  color: var(--red);
+}
+
+/* Nav links */
+.header__nav ul {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+}
+
+.header__nav a {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  padding: 4px 0;
+  transition: color var(--transition);
+}
+
+.header__nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform 0.25s;
+  transform-origin: left;
+}
+
+.header__nav a:hover::after { transform: scaleX(1); }
+
+/* Nav links saat scrolled */
+.header.scrolled .header__nav a {
+  color: var(--dark);
+}
+
+/* Language switcher */
+.header__lang {
+  display: flex;
+  gap: 6px;
+}
+
+.header__lang a {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  transition: all var(--transition);
+}
+
+.header__lang a.active,
+.header__lang a:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+/* Saat scrolled: border abu-abu */
+.header.scrolled .header__lang a {
+  border-color: #ddd;
+  color: var(--dark);
+}
+
+.header.scrolled .header__lang a.active,
+.header.scrolled .header__lang a:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+
+/* ============================================================
+   HERO — Full viewport, slider crossfade + Ken Burns
+   ============================================================ */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;           /* full tinggi layar */
+  min-height: 560px;
+  overflow: hidden;
+  background: #1a0000;     /* fallback jika gambar belum load */
+}
+
+/* Kontainer semua slide (posisi relatif, bukan flex) */
+.hero__slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Setiap slide: absolute, crossfade ── */
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+
+.hero__slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Background layer ── */
+.hero__bg {
+  position: absolute;
+  inset: -8%;                /* lebih besar dari slide agar Ken Burns tidak clip */
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  z-index: 0;
+}
+
+/* Jika pakai <img> sebagai background */
+.hero__bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Gradient overlay di atas gambar */
+.hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(10, 2, 2, 0.78) 0%,
+    rgba(10, 2, 2, 0.50) 50%,
+    rgba(10, 2, 2, 0.22) 100%
+  );
+  z-index: 1;
+}
+
+/* ── Ken Burns: zoom pelan saat slide aktif ── */
+@keyframes kenBurns {
+  0%   { transform: scale(1)    translateX(0px); }
+  100% { transform: scale(1.12) translateX(-18px); }
+}
+
+.hero__slide.is-active .hero__bg {
+  animation: kenBurns 6.5s ease-out forwards;
+}
+
+/* Watermark teks besar di background (gaya Ichiban Sushi) */
+.hero__watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(80px, 18vw, 220px);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.055);
+  letter-spacing: 16px;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ── Konten teks slide ── */
+.hero__content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  color: var(--white);
+  padding: 0 24px;
+  max-width: 760px;
+}
+
+/* Tagline — animasi dari bawah saat aktif */
+.hero__tagline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+}
+
+/* H1 judul */
+.hero__title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  margin-bottom: 22px;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.55);
+
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.6s ease 0.28s, transform 0.6s ease 0.28s;
+}
+
+/* Paragraf deskripsi */
+.hero__desc {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.7;
+  opacity: 0;
+  max-width: 520px;
+  margin: 0 auto 34px;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease 0.44s, transform 0.5s ease 0.44s;
+}
+
+/* Tombol */
+.hero__btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s ease 0.58s, transform 0.5s ease 0.58s;
+}
+
+/* Trigger semua animasi konten saat slide aktif */
+.hero__slide.is-active .hero__tagline,
+.hero__slide.is-active .hero__title,
+.hero__slide.is-active .hero__desc,
+.hero__slide.is-active .hero__btns {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ── TOMBOL ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 38px;
+  border-radius: 4px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.25s;
+}
+
+.btn--red {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+}
+
+.btn--red:hover {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(192, 57, 43, 0.45);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.60);
+}
+
+.btn--outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+}
+
+
+/* ── PROGRESS BAR ── */
+.hero__progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--red);
+  z-index: 20;
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+.hero__progress.is-running {
+  animation: progressFill 5s linear forwards;
+}
+
+
+/* ── NAVIGASI PANAH ── */
+.hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15;
+
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.22s;
+}
+
+.hero__arrow:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.hero__arrow--prev { left: 28px; }
+.hero__arrow--next { right: 28px; }
+
+
+/* ── DOT NAVIGATOR ── */
+.hero__dots {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 15;
+}
+
+.hero__dot {
+  width: 8px; height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero__dot.is-active {
+  width: 30px;
+  background: var(--white);
+  border-radius: 4px;
+}
+
+
+/* ============================================================
+   SLIDE BACKGROUND PLACEHOLDERS (offline — tanpa gambar)
+   Untuk ganti dengan gambar: lihat komentar di HTML
+   ============================================================ */
+
+/* Slide 1 — merah gelap dramatis */
+.hero__bg--1 {
+  background: linear-gradient(135deg,
+    #0d0000 0%,
+    #4a0909 20%,
+    #c0392b 58%,
+    #7a0f0f 100%
+  );
+}
+
+/* Slide 2 — navy ke merah */
+.hero__bg--2 {
+  background: linear-gradient(135deg,
+    #05050f 0%,
+    #12122e 30%,
+    #2a1a4a 55%,
+    #8b1a1a 100%
+  );
+}
+
+/* Slide 3 — oranye hangat ke merah */
+.hero__bg--3 {
+  background: linear-gradient(135deg,
+    #160800 0%,
+    #5c2200 28%,
+    #c47a2b 62%,
+    #8b2500 100%
+  );
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .header { padding: 0 28px; }
+  .header__nav ul { gap: 24px; }
+}
+
+@media (max-width: 768px) {
+  .header__nav { display: none; }   /* hamburger bisa ditambah nanti */
+  .header { padding: 0 20px; }
+  .hero__arrow { display: none; }
+  .hero__title { font-size: clamp(2rem, 8vw, 3.2rem); }
+}
