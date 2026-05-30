@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation & Transition</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    /* CSS VARIABLES */
+    :root {
+      --primary: #ff63c8;
+      --secondary: #6c63ff;
+      --dark: #1a202c;
+      --light: #f7fafc;
+      --gray: #718096;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      gap: 40px;
+    }
+
+    /* FADE IN */
+    .fade-in {
+      animation: fadeIn 1.5s ease;
+      text-align: center;
+    }
+
+    /* BUTTONS */
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    /* BUTTON 1 (color change) */
+    .btn-1 {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-1:hover {
+      background: #ff3fb3;
+    }
+
+    /* BUTTON 2 (scale transform) */
+    .btn-2 {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-2:hover {
+      transform: scale(1.1);
+    }
+
+    /* BUTTON 3 (shadow effect) */
+    .btn-3 {
+      background: white;
+      border: 2px solid var(--primary);
+    }
+
+    .btn-3:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    /* SPINNER */
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #ddd;
+      border-top: 6px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* CARD (BONUS ROTATE) */
+    .card {
+      width: 200px;
+      height: 200px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      transition: 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .card:hover {
+      transform: rotateY(180deg);
+    }
+
+    /* KEYFRAMES */
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- FADE IN TEXT -->
+  <div class="fade-in">
+    <h1>Komponen Interaktif</h1>
+    <p>Belajar Animation & Transition</p>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="buttons">
+    <button class="btn btn-1">Button 1</button>
+    <button class="btn btn-2">Button 2</button>
+    <button class="btn btn-3">Button 3</button>
+  </div>
+
+  <!-- SPINNER -->
+  <div class="spinner"></div>
+
+  <!-- CARD ROTATE -->
+  <div class="card">
+    Hover Me
+  </div>
+
+</body>
+</html>
