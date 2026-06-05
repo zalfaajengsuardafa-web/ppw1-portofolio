@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tugas 1 - CSS Position</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f4f8;
+      min-height: 200vh;
+    }
+
+    /* =============================================
+       NAVBAR - position: sticky
+       Menempel di atas saat halaman di-scroll.
+       top: 0 = batas menempelnya di mana.
+       z-index: 100 = tampil di atas elemen lain.
+       ============================================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .navbar .logo span {
+      color: #ff63c8;
+    }
+
+    .navbar nav a {
+      text-decoration: none;
+      color: #718096;
+      font-size: 14px;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+
+    .navbar nav a:hover {
+      color: #ff63c8;
+    }
+
+    /* =============================================
+       KONTEN HALAMAN
+       ============================================= */
+    .halaman {
+      padding: 60px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .judul-halaman {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ff63c8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .sub-halaman {
+      font-size: 13px;
+      color: #a0aec0;
+      margin-bottom: 8px;
+    }
+
+    /* =============================================
+       KARTU PROFIL - position: relative
+       Dijadikan "parent" agar semua elemen absolut
+       di dalamnya mengacu ke sudut kartu ini.
+       ============================================= */
+    .profile-card {
+      position: relative;   /* PARENT untuk badge, avatar, info */
+      width: 280px;
+      height: 350px;
+
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    /* Foto background mengisi seluruh kartu */
+    .card-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Overlay gelap di bagian bawah supaya teks terbaca */
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 55%;
+      background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.72));
+      z-index: 2;
+    }
+
+    /* =============================================
+       BADGE STATUS - position: absolute
+       top: 12px  = 12px dari atas kartu
+       right: 12px = 12px dari kanan kartu
+       z-index: 10 = paling depan
+       ============================================= */
+    .badge-online {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+
+      background-color: #fff;
+      color: #38a169;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #c6f6d5;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* =============================================
+       AVATAR - position: absolute
+       Foto bulat di bagian atas tengah kartu.
+       top: 16px = 16px dari atas kartu
+       left: 50% + transform = tengah horizontal
+       z-index: 5 = di atas overlay
+       ============================================= */
+    .avatar {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #ffffff;
+      box-shadow: 0 4px 16px rgba(108, 99, 255, 0.35);
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* =============================================
+       CARD INFO - position: absolute
+       Nama & role di pojok bawah tengah kartu.
+       bottom: 20px = 20px dari bawah kartu
+       left: 0 & right: 0 + text-align: center
+       supaya teks di tengah secara horizontal.
+       z-index: 3 = di atas overlay gelap
+       ============================================= */
+    .card-info {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 3;
+      padding: 0 16px;
+    }
+
+    .card-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .card-role {
+      font-size: 12px;
+      color: #ede9fe;
+      font-weight: 500;
+      background: rgba(255, 80, 237, 0.75);
+      padding: 3px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .scroll-hint {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #a0aec0;
+    }
+
+    .konten-bawah {
+      margin-top: 60px;
+      text-align: center;
+      color: #cbd5e0;
+      font-size: 13px;
+    }
+
+    /* =============================================
+       TOMBOL BACK TO TOP - position: fixed
+       Selalu di posisi yang sama di layar,
+       tidak bergerak meski halaman di-scroll.
+       bottom: 24px = 24px dari bawah layar
+       right: 24px  = 24px dari kanan layar
+       z-index: 200 = paling depan
+       ============================================= */
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+
+      background-color: #fa88e9;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(108, 99, 255, 0.4);
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .back-to-top:hover {
+      background-color: #ff63c8;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- STICKY NAVBAR -->
+  <header class="navbar">
+    <div class="logo">Profil<span>.</span></div>
+    <nav>
+      <a href="#">Beranda</a>
+      <a href="#">Tentang</a>
+      <a href="#">Kontak</a>
+    </nav>
+  </header>
+
+  <main class="halaman">
+
+    <p class="judul-halaman">Tugas 1 — CSS Position</p>
+    <p class="sub-halaman">Scroll ke bawah untuk melihat sticky navbar & tombol fixed bekerja ↓</p>
+
+    <!-- PROFILE CARD (position: relative) -->
+    <div class="profile-card">
+
+      <!-- Foto background mengisi seluruh kartu -->
+      <img class="card-bg" src="foto.png" alt="foto profil" />
+
+      <!-- Overlay gelap supaya teks di bawah terbaca -->
+      <div class="card-overlay"></div>
+
+      <!-- BADGE STATUS (position: absolute, pojok kanan atas) -->
+      <div class="badge-online">
+        🟢 Online
+      </div>
+
+      <!-- AVATAR (position: absolute, atas tengah kartu) -->
+      <div class="avatar">
+        <img src="foto.png" alt="foto profil" />
+      </div>
+
+      <!-- NAMA & ROLE (position: absolute, bawah tengah kartu) -->
+      <div class="card-info">
+        <div class="card-name">Wonyoung</div>
+        <div class="card-role">Front end developer</div>
+      </div>
+
+    </div>
+
+    <p class="scroll-hint">⬇ Scroll ke bawah untuk test sticky & fixed</p>
+
+    <div class="konten-bawah">
+      <p>— halaman masih berlanjut ke bawah —</p>
+    </div>
+
+  </main>
+
+  <!-- TOMBOL BACK TO TOP (position: fixed) -->
+  <button class="back-to-top" id="btnTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+    ↑
+  </button>
+
+  <script>
+    // Tampilkan tombol setelah scroll > 150px
+    window.addEventListener('scroll', function () {
+      const btn = document.getElementById('btnTop');
+      if (window.scrollY > 150) {
+        btn.classList.add('show');
+      } else {
+        btn.classList.remove('show');
+      }
+    });
+  </script>
+
+</body>
+</html>

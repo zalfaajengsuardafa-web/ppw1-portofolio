@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page Flexbox</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6fb;
+      color: #1a202c;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ff63c8;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: #4a5568;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+
+    .menu a:hover {
+      color: #ff63c8;
+    }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 40px;
+      gap: 40px;
+    }
+
+    .hero-text {
+      max-width: 500px;
+    }
+
+    .hero-text h1 {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .hero-text p {
+      color: #718096;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background-color: #ff63c8;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #ff3fb3;
+    }
+
+    .hero img {
+      width: 320px;
+    }
+
+    /* CARD GRID */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 40px;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      width: 260px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    /* FOOTER */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      padding: 40px;
+      background-color: #1a202c;
+      color: white;
+    }
+
+    footer div {
+      flex: 1;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">MyLanding</div>
+    <div class="menu">
+      <a href="#">Home</a>
+      <a href="#">Feature</a>
+      <a href="#">Contact</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Belajar Flexbox Itu Mudah</h1>
+      <p>Bangun landing page modern dengan layout rapi menggunakan Flexbox.</p>
+      <button class="btn">Mulai Sekarang</button>
+    </div>
+
+    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="illustration">
+  </section>
+
+  <!-- CARD GRID -->
+  <section class="cards">
+    <div class="card">
+      <h3>Fast</h3>
+      <p>Layout cepat dibuat dengan Flexbox.</p>
+    </div>
+
+    <div class="card">
+      <h3>Responsive</h3>
+      <p>Tampilan otomatis menyesuaikan layar.</p>
+    </div>
+
+    <div class="card">
+      <h3>Modern</h3>
+      <p>Desain kekinian dan clean.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <h4>About</h4>
+      <p>Website belajar Flexbox.</p>
+    </div>
+
+    <div>
+      <h4>Services</h4>
+      <p>Web Design, UI/UX</p>
+    </div>
+
+    <div>
+      <h4>Contact</h4>
+      <p>Email: example@mail.com</p>
+    </div>
+  </footer>
+
+</body>
+</html>
