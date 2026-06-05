@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertemuan 2 - Semantic HTML</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+        }
+        header, nav, main, section, article, aside, footer{
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+        }
+        header{ background:#2c3e50; color:white; }
+        nav{ background:#34495e; color:white; }
+        nav a{ color:white; margin-right:10px; text-decoration:none; }
+        main{ display:flex; gap:10px; }
+        section{ flex:3; background:white; }
+        aside{ flex:1; background:#ecf0f1; }
+        footer{ background:#2c3e50; color:white; text-align:center; }
+        table{
+            border-collapse: collapse;
+            width:100%;
+            margin-top:10px;
+        }
+        table, th, td{
+            border:1px solid #999;
+        }
+        th, td{
+            padding:8px;
+            text-align:left;
+        }
+        article{
+            background:#fafafa;
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Website Praktikum HTML</h1>
+    <p>Belajar Struktur Semantic HTML</p>
+</header>
+
+<nav>
+    <a href="#">Beranda</a>
+    <a href="#">Artikel</a>
+    <a href="#">Kontak</a>
+</nav>
+
+<main>
+
+    <section>
+        <h2>Data Diri</h2>
+        <table>
+            <tr>
+                <th>Nama</th>
+                <th>Usia</th>
+            </tr>
+            <tr>
+                <td>Zalfa Ajeng Suardafa</td>
+                <td>18</td>
+            </tr>
+        </table>
+
+        <article>
+            <h3>Artikel 1</h3>
+            <p>
+                HTML adalah bahasa markup dasar yang digunakan untuk membuat struktur halaman web.
+                Dengan HTML kita dapat menampilkan teks, gambar, tabel, dan berbagai elemen lainnya.
+            </p>
+        </article>
+
+        <article>
+            <h3>Artikel 2</h3>
+            <p>
+                Elemen semantic HTML membantu menjelaskan fungsi setiap bagian halaman web,
+                sehingga kode lebih mudah dipahami oleh pengembang maupun mesin pencari.
+            </p>
+        </article>
+
+    </section>
+
+    <aside>
+        <h3>Info Tambahan</h3>
+        <p>
+            Halaman ini adalah penggunaan struktur semantic HTML 
+            untuk tugas praktikum pertemuan_2.
+        </p>
+    </aside>
+
+</main>
+
+<footer>
+    <p>© 2026 Praktikum Web - zalfa ajeng suardafa</p>
+</footer>
+
+</body>
+</html>
