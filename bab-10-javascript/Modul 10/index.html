@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portofolio - Zalfa Ajeng Suardafa</title>
+
+<!-- EMBED JS -->
+<script>
+function sapa() {
+    console.log("=== Halaman Portofolio Mahasiswa Telah Dimuat ===");
+    console.log("Selamat datang! Semoga harimu menyenangkan 😊");
+}
+
+function pesanSemangat() {
+    alert("🌟 Semangat Belajar Pemrograman Web!\n\nJavaScript adalah salah satu bahasa paling populer di dunia. Terus berlatih!");
+}
+</script>
+
+<style>
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ffe4ec,#ffd6e8);
+    padding:30px;
+    color:#5a3e4d;
+}
+.container{max-width:700px;margin:auto}
+.card{
+    background:#fff0f6;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+h1{color:#d63384}
+.btn{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    margin:5px;
+    cursor:pointer;
+    background:#ff6fa5;
+    color:white;
+}
+.btn:hover{background:#e85d96}
+#output-eksternal{
+    background:#fff;
+    padding:10px;
+    border-radius:8px;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body onload="sapa()">
+<div class="container">
+<!-- PROFIL -->
+<div class="card">
+<h1>Zalfa Ajeng Suardafa</h1>
+<p>Mahasiswa Teknik Informatika</p>
+</div>
+
+<!-- EMBED -->
+<div class="card">
+<h3>📌 Embed JavaScript</h3>
+<p>Skill sederhana:</p>
+<ul>
+<li>JavaScript</li>
+<li>HTML & CSS</li>
+<li>Python</li>
+</ul>
+
+<script>
+    document.write("<p style='color:#d63384'>⚡ Data dimuat dengan JavaScript</p>");
+</script>
+
+</div>
+<!-- INLINE -->
+<div class="card">
+<h3>📌 Inline JavaScript</h3>
+
+<button class="btn" onclick="pesanSemangat()">Semangat</button>
+
+<button class="btn"
+onclick="alert('📧 Email: zalfa@student.ac.id\n📍 Yogyakarta')">
+Kontak
+</button>
+
+<button class="btn"
+onclick="document.getElementById('waktu').innerText = new Date().toLocaleString('id-ID')">
+Waktu
+</button>
+
+<p id="waktu"></p>
+</div>
+
+<!-- EKSTERNAL -->
+<div class="card">
+<h3>📌 Eksternal JavaScript</h3>
+<div id="output-eksternal">
+<em>Memuat data...</em>
+</div>
+</div>
+
+</div>
+
+<script src="portofolio.js"></script>
+
+</body>
+</html>

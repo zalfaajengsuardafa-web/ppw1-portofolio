@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Output JavaScript - Cuaca Harian</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #ffe4ec, #ffd6e8);
+        min-height: 100vh;
+        color: #5a3e4d;
+        padding: 30px 20px;
+        }
+        .container { max-width: 750px; margin: 0 auto; }
+        h1 { 
+        text-align:center; 
+        font-size:2rem; 
+        color:#ff6f91; 
+        margin-bottom:8px; 
+        }
+        
+        .subtitle { text-align:center; 
+            color:#bbb; margin-bottom:30px; 
+            font-size:0.9rem; 
+        }
+        .card {
+        background: rgba(255, 182, 193, 0.25);
+        border: 1px solid rgba(255, 105, 135, 0.3);
+        border-radius: 14px;
+        padding: 24px;
+        margin-bottom: 20px;
+        }
+        .method-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .badge-log { background: #ff9aa2; color: #fff; }
+        .badge-alert { background: #ffb7b2; color: #fff; }
+        .badge-write { background: #ff85a2; color: #fff; }
+        .badge-inner { background: #ffc2d1; color: #5a3e4d; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 8px; color: #fff; }
+        .card p { color: #bbb; font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
+        .btn {
+            padding: 9px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 4px;
+            transition: transform 0.15s;
+        }
+        .btn-green { background: #ff8fab; color: white; }
+        .btn-orange { background: #ffb3c6; color: #5a3e4d; }
+        .btn-blue { background: #ff6f91; color: white; }
+        #cuaca-output {
+            background: rgba(0,0,0,0.35);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        .cuaca-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .cuaca-item:last-child { border: none; }
+        .suhu { font-size: 1.3rem; font-weight: 700; color: #f5a623; }
+        .hint { color: #888; font-size: 0.8rem; font-style: italic; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<script>
+    document.write("<div style='text-align:center; color:#ff6f91; margin-bottom:10px; font-weight:bold;'>🌸 Halaman cuaca berhasil dimuat</div>");
+</script>
+
+<div class="container">
+    <h1>🌤️ Info Cuaca Harian</h1>
+    <p class="subtitle">Demo semua metode output JavaScript</p>
+
+    <!-- console.log -->
+    <div class="card">
+        <span class="method-badge badge-log">console.log()</span>
+        <h3>Log Data Cuaca</h3>
+        <button class="btn btn-green" onclick="logDataCuaca()">Klik</button>
+        <p class="hint">Buka F12 → Console</p>
+    </div>
+
+    <!-- alert -->
+    <div class="card">
+        <span class="method-badge badge-alert">alert()</span>
+        <h3>Peringatan Cuaca</h3>
+        <button class="btn btn-orange" onclick="tampilkanPeringatan()">Tampilkan</button>
+    </div>
+
+    <!-- innerHTML -->
+    <div class="card">
+        <span class="method-badge badge-inner">innerHTML</span>
+        <h3>Data Cuaca Kota</h3>
+        <button class="btn btn-blue" onclick="muatDataCuaca()">Muat Data</button>
+        <div id="cuaca-output">
+            <em>Klik tombol untuk menampilkan data...</em>
+        </div>
+    </div>
+</div>
+
+<script>
+    // console.log
+    function logDataCuaca() {
+        var suhu = 31;
+        console.log("Suhu: " + suhu + "°C");
+        alert("Cek console ya!");
+    }
+
+    // alert
+    function tampilkanPeringatan() {
+        alert("⚠️ Hujan deras sore ini, hati-hati!");
+    }
+
+    // innerHTML
+    function muatDataCuaca() {
+        var data = [
+            { kota: "Yogyakarta", suhu: 32 },
+            { kota: "Semarang", suhu: 29 },
+            { kota: "Solo", suhu: 26 }
+        ];
+
+        var isi = "";
+        for (var i = 0; i < data.length; i++) {
+            isi += "<p>" + data[i].kota + " : " + data[i].suhu + "°C</p>";
+        }
+
+        document.getElementById("cuaca-output").innerHTML = isi;
+    }
+</script>
+
+</body>
+</html>
