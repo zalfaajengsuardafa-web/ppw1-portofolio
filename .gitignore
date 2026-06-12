@@ -20,3 +20,10 @@ desktop.ini
 # Log dan cache
 *.log
 cache/
+
+# Dependencies
+node_modules/
+vendor/
+
+# Test coverage
+coverage/

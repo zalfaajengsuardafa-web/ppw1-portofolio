@@ -1,0 +1,16 @@
+{
+  "name": "ppw1-portofolio",
+  "version": "1.0.0",
+  "description": "Kumpulan tugas Praktikum Pemrograman Web 1  Program Studi TRPL — Semester 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
