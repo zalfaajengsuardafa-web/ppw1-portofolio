@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS transaksi (
 -- Data contoh: users (password = 'admin123')
 -- ============================================
 INSERT INTO users (username, password, nama_lengkap, role) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin'),
-('zalfa', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Zalfa Ajeng Suardafa', 'admin');
+('admin', '$2y$10$VqrvYdByPVLxa5UWBBH3x.6E0ZFgt2cAIPwhClyu2SbiYHKVq.tRW', 'Administrator', 'admin'),
+('zalfa', '$2y$10$VqrvYdByPVLxa5UWBBH3x.6E0ZFgt2cAIPwhClyu2SbiYHKVq.tRW', 'Zalfa Ajeng Suardafa', 'admin');
 
 -- ============================================
 -- Data contoh: mobil (minimal 5 record)
