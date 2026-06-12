@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../shared/php/grade_converter.php';
+
 $nilai = null;
 $grade = null;
 $deskripsi = null;
@@ -13,24 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Masukkan angka yang valid.';
     } else {
         $nilai = (int)$input;
+        $result = convertGrade($nilai);
 
-        if ($nilai < 0 || $nilai > 100) {
-            $error = 'Nilai harus berada di antara 0 sampai 100.';
-        } elseif ($nilai >= 85) {
-            $grade = 'A'; $deskripsi = 'Sangat Baik — Luar biasa! Pertahankan prestasi anda.';
-            $badge = 'bg-success'; $alert = 'alert-success';
-        } elseif ($nilai >= 70) {
-            $grade = 'B'; $deskripsi = 'Baik — Hasil yang bagus, terus tingkatkan!';
-            $badge = 'bg-primary'; $alert = 'alert-primary';
-        } elseif ($nilai >= 55) {
-            $grade = 'C'; $deskripsi = 'Cukup — Perlu lebih banyak belajar dan berlatih.';
-            $badge = 'bg-warning text-dark'; $alert = 'alert-warning';
-        } elseif ($nilai >= 40) {
-            $grade = 'D'; $deskripsi = 'Kurang — Nilai di bawah standar, perlu perbaikan serius.';
-            $badge = 'bg-secondary'; $alert = 'alert-secondary';
+        if (isset($result['error'])) {
+            $error = $result['error'];
         } else {
-            $grade = 'E'; $deskripsi = 'Sangat Kurang — Tidak memenuhi syarat kelulusan.';
-            $badge = 'bg-danger'; $alert = 'alert-danger';
+            $grade     = $result['grade'];
+            $deskripsi = $result['description'] . ' — ' . $result['detail'];
+            $badge     = $result['badge'];
+            $alert     = $result['alert'];
         }
     }
 }

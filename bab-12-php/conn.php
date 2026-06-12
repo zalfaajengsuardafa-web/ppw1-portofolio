@@ -1,12 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "akademik";
+require_once __DIR__ . '/../shared/php/db_connect.php';
 
-$conn = mysqli_connect($servername, $username, $password, $database);
-
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
+$conn = db_connect('localhost', 'root', '', 'akademik');
 ?>
