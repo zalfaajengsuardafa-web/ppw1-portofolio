@@ -33,6 +33,14 @@ Program Studi TRPL — Semester 2
 
 ---
 
+## 🎓 Ujian Akhir Semester (UAS)
+
+| Proyek | Deskripsi | Folder |
+|--------|-----------|--------|
+| UAS    | Sistem Rental Mobil (PHP, MySQL, Bootstrap, JS) | uas-rental-mobil/ |
+
+---
+
 ## 🛠️ Teknologi yang Digunakan
 
 HTML · CSS · JavaScript · PHP · MySQL · Bootstrap
