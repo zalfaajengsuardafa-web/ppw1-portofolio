@@ -10,6 +10,11 @@ if ($search !== '') {
 }
 
 $result = mysqli_query($conn, $query);
+
+if (!$result) {
+    die("Query error: " . htmlspecialchars(mysqli_error($conn)));
+}
+
 $total  = mysqli_num_rows($result);
 
 function getPredikat($ipk) {
@@ -48,6 +53,7 @@ function getPredikat($ipk) {
       if ($pesan === 'edit')     $teks = 'Data berhasil diperbarui.';
       if ($pesan === 'hapus')    $teks = 'Data berhasil dihapus.';
       if ($pesan === 'duplikat') { $teks = 'NIM sudah terdaftar!'; $tipe = 'danger'; }
+      if ($pesan === 'error')    { $teks = isset($_GET['detail']) ? htmlspecialchars($_GET['detail']) : 'Terjadi kesalahan.'; $tipe = 'danger'; }
     ?>
     <div class="alert alert-<?= $tipe ?> alert-dismissible fade show" role="alert">
       <?= $teks ?>

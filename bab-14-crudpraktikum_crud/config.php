@@ -53,8 +53,12 @@ function uploadFile($file, $target_dir = "uploads/mahasiswa/") {
 // Fungsi untuk hapus file
 function deleteFile($filename, $dir = "uploads/mahasiswa/") {
     if ($filename && file_exists($dir . $filename)) {
-        unlink($dir . $filename);
+        if (!unlink($dir . $filename)) {
+            error_log("Gagal menghapus file: " . $dir . $filename);
+            return false;
+        }
     }
+    return true;
 }
 ?>
 

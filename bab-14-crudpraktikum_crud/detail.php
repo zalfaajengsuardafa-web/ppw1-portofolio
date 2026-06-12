@@ -10,7 +10,14 @@ if (!isset($_GET['id'])) {
 $id     = (int)$_GET['id'];
 $result = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE id=$id");
 
+if (!$result) {
+    $_SESSION['error'] = "Terjadi kesalahan saat mengambil data: " . mysqli_error($conn);
+    header("Location: index.php");
+    exit();
+}
+
 if (mysqli_num_rows($result) == 0) {
+    $_SESSION['error'] = "Data mahasiswa tidak ditemukan.";
     header("Location: index.php");
     exit();
 }

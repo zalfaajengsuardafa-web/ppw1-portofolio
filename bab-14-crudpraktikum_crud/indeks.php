@@ -17,12 +17,21 @@ if (!empty($search)) {
 // Hitung total data
 $count_query = "SELECT COUNT(*) as total FROM mahasiswa $search_query";
 $count_result = mysqli_query($conn, $count_query);
+
+if (!$count_result) {
+    die("Query error: " . htmlspecialchars(mysqli_error($conn)));
+}
+
 $total_data = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_data / $limit);
 
 // Query untuk mengambil data dengan pagination
 $query = "SELECT * FROM mahasiswa $search_query ORDER BY id DESC LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $query);
+
+if (!$result) {
+    die("Query error: " . htmlspecialchars(mysqli_error($conn)));
+}
 ?>
 
 <!DOCTYPE html>

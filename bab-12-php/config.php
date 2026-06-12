@@ -43,7 +43,12 @@ function uploadFile($file, $target_dir = "uploads/mahasiswa/") {
 }
 
 function deleteFile($filename, $dir = "uploads/mahasiswa/") {
-  if ($filename && file_exists($dir . $filename))
-    unlink($dir . $filename);
+  if ($filename && file_exists($dir . $filename)) {
+    if (!unlink($dir . $filename)) {
+      error_log("Gagal menghapus file: " . $dir . $filename);
+      return false;
+    }
+  }
+  return true;
 }
 ?>

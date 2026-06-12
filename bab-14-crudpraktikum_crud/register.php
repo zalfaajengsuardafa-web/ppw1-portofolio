@@ -24,7 +24,9 @@ if (isset($_POST['register'])) {
     if ($password !== $confirm_password) $errors[] = "Konfirmasi password tidak cocok";
 
     $check_result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username' OR email = '$email'");
-    if (mysqli_num_rows($check_result) > 0) {
+    if (!$check_result) {
+        $errors[] = "Terjadi kesalahan pada sistem. Silakan coba lagi.";
+    } elseif (mysqli_num_rows($check_result) > 0) {
         $errors[] = "Username atau email sudah terdaftar";
     }
 

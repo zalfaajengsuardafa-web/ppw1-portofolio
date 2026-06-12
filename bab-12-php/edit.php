@@ -1,20 +1,30 @@
 <?php
 include 'koneksi.php';
 
-$id = $_GET['id'];
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: index.php?pesan=error&detail=ID+tidak+valid");
+    exit;
+}
+
+$id = (int) $_GET['id'];
 
 // Mengambil data berdasarkan ID
 $data = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE id='$id'");
+
+if (!$data || mysqli_num_rows($data) === 0) {
+    header("Location: index.php?pesan=error&detail=Data+tidak+ditemukan");
+    exit;
+}
+
 $d = mysqli_fetch_array($data);
 
 if(isset($_POST['submit'])){
-    $nama   = $_POST['nama'];
-    $nim    = $_POST['nim'];
-    $prodi  = $_POST['prodi'];
-    $alamat = $_POST['alamat'];
+    $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
+    $nim    = mysqli_real_escape_string($conn, $_POST['nim']);
+    $prodi  = mysqli_real_escape_string($conn, $_POST['prodi']);
+    $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
 
-    // Perbaikan sintaks variabel di dalam query
-    mysqli_query($conn, "UPDATE mahasiswa SET 
+    $result = mysqli_query($conn, "UPDATE mahasiswa SET 
         nama='$nama', 
         nim='$nim', 
         prodi='$prodi', 
@@ -22,7 +32,12 @@ if(isset($_POST['submit'])){
         WHERE id='$id'"
     );
 
-    header("Location:index.php");
+    if (!$result) {
+        $error = "Gagal memperbarui data: " . mysqli_error($conn);
+    } else {
+        header("Location: index.php?pesan=edit");
+        exit;
+    }
 }
 ?>
 
@@ -36,6 +51,10 @@ if(isset($_POST['submit'])){
 <body class="container mt-5">
 
 <h2>Edit Data Mahasiswa</h2>
+
+<?php if (isset($error)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+<?php endif; ?>
 
 <form method="POST">
     <div class="mb-3">

@@ -1,14 +1,16 @@
 <?php
 include 'koneksi.php';
 
+$error = null;
+
 if(isset($_POST['submit'])){
 
-    $nama = $_POST['nama'];
-    $nim = $_POST['nim'];
-    $prodi = $_POST['prodi'];
-    $alamat = $_POST['alamat'];
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $nim = mysqli_real_escape_string($conn, $_POST['nim']);
+    $prodi = mysqli_real_escape_string($conn, $_POST['prodi']);
+    $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
 
-    mysqli_query($conn, "INSERT INTO mahasiswa VALUES(
+    $result = mysqli_query($conn, "INSERT INTO mahasiswa VALUES(
         '',
         '$nama',
         '$nim',
@@ -16,7 +18,12 @@ if(isset($_POST['submit'])){
         '$alamat'
     )");
 
-    header("Location:index.php");
+    if (!$result) {
+        $error = "Gagal menyimpan data: " . mysqli_error($conn);
+    } else {
+        header("Location: index.php?pesan=tambah");
+        exit;
+    }
 }
 ?>
 
@@ -31,6 +38,10 @@ if(isset($_POST['submit'])){
 <body class="container mt-5">
 
 <h2>Tambah Data Mahasiswa</h2>
+
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+<?php endif; ?>
 
 <form method="POST">
 

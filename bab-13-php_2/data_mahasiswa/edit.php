@@ -30,13 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $semester = mysqli_real_escape_string($conn, trim($_POST['semester']));
 
     $cek = mysqli_query($conn, "SELECT id FROM mahasiswa WHERE nim = '$nim' AND id != $id");
+    if (!$cek) {
+        header('Location: index.php?pesan=error&detail=' . urlencode('Query error: ' . mysqli_error($conn)));
+        exit;
+    }
     if (mysqli_num_rows($cek) > 0) {
         header('Location: index.php?pesan=duplikat');
         exit;
     }
 
-    mysqli_query($conn, "UPDATE mahasiswa SET nim='$nim', nama='$nama', prodi='$prodi',
+    $result = mysqli_query($conn, "UPDATE mahasiswa SET nim='$nim', nama='$nama', prodi='$prodi',
                          ipk='$ipk', semester='$semester' WHERE id=$id");
+    if (!$result) {
+        header('Location: index.php?pesan=error&detail=' . urlencode('Gagal memperbarui: ' . mysqli_error($conn)));
+        exit;
+    }
     header('Location: index.php?pesan=edit');
     exit;
 }
