@@ -13,20 +13,27 @@ $prodi_list = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nim      = mysqli_real_escape_string($conn, trim($_POST['nim']));
-    $nama     = mysqli_real_escape_string($conn, trim($_POST['nama']));
-    $prodi    = mysqli_real_escape_string($conn, trim($_POST['prodi']));
-    $ipk      = mysqli_real_escape_string($conn, trim($_POST['ipk']));
-    $semester = mysqli_real_escape_string($conn, trim($_POST['semester']));
+    $nim      = trim($_POST['nim']);
+    $nama     = trim($_POST['nama']);
+    $prodi    = trim($_POST['prodi']);
+    $ipk      = trim($_POST['ipk']);
+    $semester = trim($_POST['semester']);
 
-    $cek = mysqli_query($conn, "SELECT id FROM mahasiswa WHERE nim = '$nim'");
+    $stmt_check = mysqli_prepare($conn, "SELECT id FROM mahasiswa WHERE nim = ?");
+    mysqli_stmt_bind_param($stmt_check, "s", $nim);
+    mysqli_stmt_execute($stmt_check);
+    $cek = mysqli_stmt_get_result($stmt_check);
     if (mysqli_num_rows($cek) > 0) {
+        mysqli_stmt_close($stmt_check);
         header('Location: index.php?pesan=duplikat');
         exit;
     }
+    mysqli_stmt_close($stmt_check);
 
-    mysqli_query($conn, "INSERT INTO mahasiswa (nim, nama, prodi, ipk, semester)
-                         VALUES ('$nim', '$nama', '$prodi', '$ipk', '$semester')");
+    $stmt = mysqli_prepare($conn, "INSERT INTO mahasiswa (nim, nama, prodi, ipk, semester) VALUES (?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "sssds", $nim, $nama, $prodi, $ipk, $semester);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
     header('Location: index.php?pesan=tambah');
     exit;
 }

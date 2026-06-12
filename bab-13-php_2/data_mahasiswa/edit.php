@@ -13,7 +13,10 @@ $prodi_list = [
 ];
 
 $id     = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$result = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE id = $id");
+$stmt_sel = mysqli_prepare($conn, "SELECT * FROM mahasiswa WHERE id = ?");
+mysqli_stmt_bind_param($stmt_sel, "i", $id);
+mysqli_stmt_execute($stmt_sel);
+$result = mysqli_stmt_get_result($stmt_sel);
 
 if (mysqli_num_rows($result) === 0) {
     header('Location: index.php');
@@ -23,20 +26,27 @@ if (mysqli_num_rows($result) === 0) {
 $data = mysqli_fetch_assoc($result);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nim      = mysqli_real_escape_string($conn, trim($_POST['nim']));
-    $nama     = mysqli_real_escape_string($conn, trim($_POST['nama']));
-    $prodi    = mysqli_real_escape_string($conn, trim($_POST['prodi']));
-    $ipk      = mysqli_real_escape_string($conn, trim($_POST['ipk']));
-    $semester = mysqli_real_escape_string($conn, trim($_POST['semester']));
+    $nim      = trim($_POST['nim']);
+    $nama     = trim($_POST['nama']);
+    $prodi    = trim($_POST['prodi']);
+    $ipk      = trim($_POST['ipk']);
+    $semester = trim($_POST['semester']);
 
-    $cek = mysqli_query($conn, "SELECT id FROM mahasiswa WHERE nim = '$nim' AND id != $id");
+    $stmt_dup = mysqli_prepare($conn, "SELECT id FROM mahasiswa WHERE nim = ? AND id != ?");
+    mysqli_stmt_bind_param($stmt_dup, "si", $nim, $id);
+    mysqli_stmt_execute($stmt_dup);
+    $cek = mysqli_stmt_get_result($stmt_dup);
     if (mysqli_num_rows($cek) > 0) {
+        mysqli_stmt_close($stmt_dup);
         header('Location: index.php?pesan=duplikat');
         exit;
     }
+    mysqli_stmt_close($stmt_dup);
 
-    mysqli_query($conn, "UPDATE mahasiswa SET nim='$nim', nama='$nama', prodi='$prodi',
-                         ipk='$ipk', semester='$semester' WHERE id=$id");
+    $stmt_upd = mysqli_prepare($conn, "UPDATE mahasiswa SET nim=?, nama=?, prodi=?, ipk=?, semester=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt_upd, "sssdsi", $nim, $nama, $prodi, $ipk, $semester, $id);
+    mysqli_stmt_execute($stmt_upd);
+    mysqli_stmt_close($stmt_upd);
     header('Location: index.php?pesan=edit');
     exit;
 }

@@ -1,16 +1,32 @@
 <?php
 session_start();
-// Konfigurasi database
-$host     = "sql313.infinityfree.com";
-$username = "if0_42065503";
-$password = "rayaisme";
-$database = "if0_42065503_db_praktikum_crud";
+
+// Konfigurasi database — baca dari environment variable, jangan hardcode kredensial
+$host     = getenv('DB_HOST')     ?: "localhost";
+$username = getenv('DB_USERNAME') ?: "root";
+$password = getenv('DB_PASSWORD') ?: "";
+$database = getenv('DB_DATABASE') ?: "db_praktikum_crud";
+
 // Membuat koneksi
 $conn = mysqli_connect($host, $username, $password, $database);
 // Cek koneksi
 if (!$conn) {
-    die("Koneksi gagal: " . mysqli_connect_error());
+    die("Koneksi gagal. Silakan hubungi administrator.");
 }
+
+// Fungsi untuk generate CSRF token
+function generateCsrfToken() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// Fungsi untuk validasi CSRF token
+function validateCsrfToken($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
 // Fungsi untuk cek login
 function isLoggedIn() {
     return isset($_SESSION['user_id']);

@@ -1,9 +1,14 @@
 <?php
 include 'koneksi.php';
 
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-mysqli_query($conn, "DELETE FROM mahasiswa WHERE id='$id'");
+if ($id > 0) {
+    $stmt = mysqli_prepare($conn, "DELETE FROM mahasiswa WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
 
 header("Location:index.php");
 ?>

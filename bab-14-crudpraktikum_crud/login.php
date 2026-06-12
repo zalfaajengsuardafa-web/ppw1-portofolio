@@ -121,25 +121,31 @@
         }
         
         if (isset($_POST['login'])) {
-            $username = mysqli_real_escape_string($conn, $_POST['username']);
-            $password = $_POST['password'];
-            
-            $query = "SELECT * FROM users WHERE username = '$username' OR email = '$username'";
-            $result = mysqli_query($conn, $query);
-            
-            if (mysqli_num_rows($result) == 1) {
-                $user = mysqli_fetch_assoc($result);
-                if (password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['username'] = $user['username'];
-                    $_SESSION['full_name'] = $user['full_name'];
-                    header("Location: index.php");
-                    exit();
+            if (!validateCsrfToken($_POST['csrf_token'] ?? '')) {
+                $error = "Sesi tidak valid. Silakan coba lagi.";
+            } else {
+                $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE username = ? OR email = ?");
+                $input_user = $_POST['username'];
+                mysqli_stmt_bind_param($stmt, "ss", $input_user, $input_user);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+
+                if (mysqli_num_rows($result) == 1) {
+                    $user = mysqli_fetch_assoc($result);
+                    if (password_verify($_POST['password'], $user['password'])) {
+                        session_regenerate_id(true);
+                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['username'] = $user['username'];
+                        $_SESSION['full_name'] = $user['full_name'];
+                        header("Location: index.php");
+                        exit();
+                    } else {
+                        $error = "Username atau password salah!";
+                    }
                 } else {
                     $error = "Username atau password salah!";
                 }
-            } else {
-                $error = "Username atau password salah!";
+                mysqli_stmt_close($stmt);
             }
         }
         ?>
@@ -149,6 +155,7 @@
         <?php endif; ?>
         
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
             <div class="form-group">
                 <label for="username">Username atau Email</label>
                 <input type="text" name="username" id="username" required>

@@ -7,35 +7,44 @@ if (isLoggedIn()) {
 }
 
 if (isset($_POST['register'])) {
-    $username         = mysqli_real_escape_string($conn, $_POST['username']);
-    $email            = mysqli_real_escape_string($conn, $_POST['email']);
-    $full_name        = mysqli_real_escape_string($conn, $_POST['full_name']);
-    $password         = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    if (!validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        $errors[] = "Sesi tidak valid. Silakan coba lagi.";
+    } else {
+        $username         = trim($_POST['username']);
+        $email            = trim($_POST['email']);
+        $full_name        = trim($_POST['full_name']);
+        $password         = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
 
-    $errors = [];
+        $errors = [];
 
-    if (empty($username))  $errors[] = "Username tidak boleh kosong";
-    if (empty($email))     $errors[] = "Email tidak boleh kosong";
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Format email tidak valid";
-    if (empty($full_name)) $errors[] = "Nama lengkap tidak boleh kosong";
-    if (empty($password))  $errors[] = "Password tidak boleh kosong";
-    elseif (strlen($password) < 6) $errors[] = "Password minimal 6 karakter";
-    if ($password !== $confirm_password) $errors[] = "Konfirmasi password tidak cocok";
+        if (empty($username))  $errors[] = "Username tidak boleh kosong";
+        if (empty($email))     $errors[] = "Email tidak boleh kosong";
+        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Format email tidak valid";
+        if (empty($full_name)) $errors[] = "Nama lengkap tidak boleh kosong";
+        if (empty($password))  $errors[] = "Password tidak boleh kosong";
+        elseif (strlen($password) < 6) $errors[] = "Password minimal 6 karakter";
+        if ($password !== $confirm_password) $errors[] = "Konfirmasi password tidak cocok";
 
-    $check_result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username' OR email = '$email'");
-    if (mysqli_num_rows($check_result) > 0) {
-        $errors[] = "Username atau email sudah terdaftar";
-    }
+        $stmt_check = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? OR email = ?");
+        mysqli_stmt_bind_param($stmt_check, "ss", $username, $email);
+        mysqli_stmt_execute($stmt_check);
+        $check_result = mysqli_stmt_get_result($stmt_check);
+        if (mysqli_num_rows($check_result) > 0) {
+            $errors[] = "Username atau email sudah terdaftar";
+        }
+        mysqli_stmt_close($stmt_check);
 
-    if (empty($errors)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $insert_query = "INSERT INTO users (username, email, full_name, password)
-                         VALUES ('$username', '$email', '$full_name', '$hashed_password')";
-        if (mysqli_query($conn, $insert_query)) {
-            $success = "Registrasi berhasil! Silakan login.";
-        } else {
-            $errors[] = "Error: " . mysqli_error($conn);
+        if (empty($errors)) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt_insert = mysqli_prepare($conn, "INSERT INTO users (username, email, full_name, password) VALUES (?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt_insert, "ssss", $username, $email, $full_name, $hashed_password);
+            if (mysqli_stmt_execute($stmt_insert)) {
+                $success = "Registrasi berhasil! Silakan login.";
+            } else {
+                $errors[] = "Terjadi kesalahan saat mendaftar. Silakan coba lagi.";
+            }
+            mysqli_stmt_close($stmt_insert);
         }
     }
 }
@@ -87,6 +96,7 @@ if (isset($_POST['register'])) {
         <?php endif; ?>
 
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>

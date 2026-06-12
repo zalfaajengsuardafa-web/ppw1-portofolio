@@ -3,52 +3,58 @@ include_once("config.php");
 requireLogin();
 
 if(isset($_POST['submit'])) {
-    $nim = mysqli_real_escape_string($conn, $_POST['nim']);
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $jurusan = mysqli_real_escape_string($conn, $_POST['jurusan']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
-    
-    $errors = array();
-    $foto_filename = null;
-    
-    // Validasi form
-    if(empty($nim)) $errors[] = "NIM tidak boleh kosong";
-    if(empty($nama)) $errors[] = "Nama tidak boleh kosong";
-    if(empty($jurusan)) $errors[] = "Jurusan tidak boleh kosong";
-    if(empty($email)) $errors[] = "Email tidak boleh kosong";
-    elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Format email tidak valid";
-    
-    // Cek apakah NIM sudah ada
-    $check_nim = mysqli_query($conn, "SELECT nim FROM mahasiswa WHERE nim = '$nim'");
-    if(mysqli_num_rows($check_nim) > 0) {
-        $errors[] = "NIM sudah terdaftar";
-    }
-    
-    // Proses upload foto jika ada
-    if(!empty($_FILES['foto']['name'])) {
-        $upload_result = uploadFile($_FILES['foto']);
-        if($upload_result['success']) {
-            $foto_filename = $upload_result['filename'];
-        } else {
-            $errors[] = $upload_result['message'];
+    if (!validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        $errors[] = "Sesi tidak valid. Silakan coba lagi.";
+    } else {
+        $nim = trim($_POST['nim']);
+        $nama = trim($_POST['nama']);
+        $jurusan = trim($_POST['jurusan']);
+        $email = trim($_POST['email']);
+        $alamat = trim($_POST['alamat']);
+
+        $errors = array();
+        $foto_filename = null;
+
+        // Validasi form
+        if(empty($nim)) $errors[] = "NIM tidak boleh kosong";
+        if(empty($nama)) $errors[] = "Nama tidak boleh kosong";
+        if(empty($jurusan)) $errors[] = "Jurusan tidak boleh kosong";
+        if(empty($email)) $errors[] = "Email tidak boleh kosong";
+        elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Format email tidak valid";
+
+        // Cek apakah NIM sudah ada (prepared statement)
+        $stmt_check = mysqli_prepare($conn, "SELECT nim FROM mahasiswa WHERE nim = ?");
+        mysqli_stmt_bind_param($stmt_check, "s", $nim);
+        mysqli_stmt_execute($stmt_check);
+        $check_nim = mysqli_stmt_get_result($stmt_check);
+        if(mysqli_num_rows($check_nim) > 0) {
+            $errors[] = "NIM sudah terdaftar";
         }
-    }
-    
-    // Jika tidak ada error, simpan data
-    if(empty($errors)) {
-        $foto_sql = $foto_filename ? "'$foto_filename'" : "NULL";
-        $query = "INSERT INTO mahasiswa(nim, nama, jurusan, email, alamat, foto) 
-                  VALUES('$nim', '$nama', '$jurusan', '$email', '$alamat', $foto_sql)";
-        
-        if(mysqli_query($conn, $query)) {
-            $success = "Data berhasil ditambahkan!";
-        } else {
-            $errors[] = "Error: " . mysqli_error($conn);
-            // Hapus file foto jika ada error saat insert
-            if($foto_filename) {
-                deleteFile($foto_filename);
+        mysqli_stmt_close($stmt_check);
+
+        // Proses upload foto jika ada
+        if(!empty($_FILES['foto']['name'])) {
+            $upload_result = uploadFile($_FILES['foto']);
+            if($upload_result['success']) {
+                $foto_filename = $upload_result['filename'];
+            } else {
+                $errors[] = $upload_result['message'];
             }
+        }
+
+        // Jika tidak ada error, simpan data (prepared statement)
+        if(empty($errors)) {
+            $stmt_insert = mysqli_prepare($conn, "INSERT INTO mahasiswa(nim, nama, jurusan, email, alamat, foto) VALUES(?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt_insert, "ssssss", $nim, $nama, $jurusan, $email, $alamat, $foto_filename);
+            if(mysqli_stmt_execute($stmt_insert)) {
+                $success = "Data berhasil ditambahkan!";
+            } else {
+                $errors[] = "Terjadi kesalahan saat menyimpan data. Silakan coba lagi.";
+                if($foto_filename) {
+                    deleteFile($foto_filename);
+                }
+            }
+            mysqli_stmt_close($stmt_insert);
         }
     }
 }
@@ -226,6 +232,7 @@ if(isset($_POST['submit'])) {
         <?php endif; ?>
         
         <form action="tambah.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
             <div class="form-group">
                 <label for="foto">📷 Foto Profil</label>
                 <div class="file-input-wrapper">

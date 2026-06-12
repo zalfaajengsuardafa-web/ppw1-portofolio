@@ -3,20 +3,18 @@ include 'koneksi.php';
 
 if(isset($_POST['submit'])){
 
-    $nama = $_POST['nama'];
-    $nim = $_POST['nim'];
-    $prodi = $_POST['prodi'];
-    $alamat = $_POST['alamat'];
+    $nama = trim($_POST['nama']);
+    $nim = trim($_POST['nim']);
+    $prodi = trim($_POST['prodi']);
+    $alamat = trim($_POST['alamat']);
 
-    mysqli_query($conn, "INSERT INTO mahasiswa VALUES(
-        '',
-        '$nama',
-        '$nim',
-        '$prodi',
-        '$alamat'
-    )");
+    $stmt = mysqli_prepare($conn, "INSERT INTO mahasiswa (nama, nim, prodi, alamat) VALUES (?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "ssss", $nama, $nim, $prodi, $alamat);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 
     header("Location:index.php");
+    exit;
 }
 ?>
 

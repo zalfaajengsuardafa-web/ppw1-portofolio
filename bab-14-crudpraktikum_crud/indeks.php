@@ -7,22 +7,39 @@ $limit = 5; // Data per halaman
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Konfigurasi search
-$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-$search_query = '';
+// Konfigurasi search (prepared statement)
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
 if (!empty($search)) {
-    $search_query = "WHERE nim LIKE '%$search%' OR nama LIKE '%$search%' OR jurusan LIKE '%$search%' OR email LIKE '%$search%'";
+    $search_param = '%' . $search . '%';
+    // Hitung total data
+    $stmt_count = mysqli_prepare($conn, "SELECT COUNT(*) as total FROM mahasiswa WHERE nim LIKE ? OR nama LIKE ? OR jurusan LIKE ? OR email LIKE ?");
+    mysqli_stmt_bind_param($stmt_count, "ssss", $search_param, $search_param, $search_param, $search_param);
+    mysqli_stmt_execute($stmt_count);
+    $count_result = mysqli_stmt_get_result($stmt_count);
+    $total_data = mysqli_fetch_assoc($count_result)['total'];
+    mysqli_stmt_close($stmt_count);
+
+    // Query data dengan pagination
+    $stmt_data = mysqli_prepare($conn, "SELECT * FROM mahasiswa WHERE nim LIKE ? OR nama LIKE ? OR jurusan LIKE ? OR email LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?");
+    mysqli_stmt_bind_param($stmt_data, "ssssii", $search_param, $search_param, $search_param, $search_param, $limit, $offset);
+    mysqli_stmt_execute($stmt_data);
+    $result = mysqli_stmt_get_result($stmt_data);
+    mysqli_stmt_close($stmt_data);
+} else {
+    $stmt_count = mysqli_prepare($conn, "SELECT COUNT(*) as total FROM mahasiswa");
+    mysqli_stmt_execute($stmt_count);
+    $count_result = mysqli_stmt_get_result($stmt_count);
+    $total_data = mysqli_fetch_assoc($count_result)['total'];
+    mysqli_stmt_close($stmt_count);
+
+    $stmt_data = mysqli_prepare($conn, "SELECT * FROM mahasiswa ORDER BY id DESC LIMIT ? OFFSET ?");
+    mysqli_stmt_bind_param($stmt_data, "ii", $limit, $offset);
+    mysqli_stmt_execute($stmt_data);
+    $result = mysqli_stmt_get_result($stmt_data);
+    mysqli_stmt_close($stmt_data);
 }
-
-// Hitung total data
-$count_query = "SELECT COUNT(*) as total FROM mahasiswa $search_query";
-$count_result = mysqli_query($conn, $count_query);
-$total_data = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_data / $limit);
-
-// Query untuk mengambil data dengan pagination
-$query = "SELECT * FROM mahasiswa $search_query ORDER BY id DESC LIMIT $limit OFFSET $offset";
-$result = mysqli_query($conn, $query);
 ?>
 
 <!DOCTYPE html>
@@ -228,7 +245,7 @@ $result = mysqli_query($conn, $query);
         <div class="header">
             <h1>📚 Data Mahasiswa</h1>
             <div class="user-info">
-                <span>Selamat datang, <strong><?php echo $_SESSION['full_name']; ?></strong></span>
+                <span>Selamat datang, <strong><?php echo htmlspecialchars($_SESSION['full_name']); ?></strong></span>
                 <a href="logout.php" class="btn btn-secondary">Logout</a>
             </div>
         </div>
@@ -291,8 +308,11 @@ $result = mysqli_query($conn, $query);
                     <td><?php echo htmlspecialchars($row['alamat']); ?></td>
                     <td>
                         <a href='edit.php?id=<?php echo $row['id']; ?>' class='btn btn-warning'>✏️ Edit</a>
-                        <a href='hapus.php?id=<?php echo $row['id']; ?>' class='btn btn-danger' 
-                           onclick='return confirm("Yakin ingin menghapus data <?php echo htmlspecialchars($row['nama']); ?>?")'>🗑️ Hapus</a>
+                        <form method="POST" action="hapus.php" style="display:inline" onsubmit="return confirm('Yakin ingin menghapus data <?php echo htmlspecialchars($row['nama'], ENT_QUOTES); ?>?')">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                            <button type="submit" class="btn btn-danger">🗑️ Hapus</button>
+                        </form>
                     </td>
                 </tr>
                 <?php endwhile; ?>

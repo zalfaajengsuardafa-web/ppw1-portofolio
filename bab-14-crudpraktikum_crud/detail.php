@@ -8,7 +8,10 @@ if (!isset($_GET['id'])) {
 }
 
 $id     = (int)$_GET['id'];
-$result = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE id=$id");
+$stmt = mysqli_prepare($conn, "SELECT * FROM mahasiswa WHERE id=?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 if (mysqli_num_rows($result) == 0) {
     header("Location: index.php");

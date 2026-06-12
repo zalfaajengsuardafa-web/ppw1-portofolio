@@ -1,15 +1,17 @@
 <?php
 require 'koneksi.php';
 
-$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 if ($search !== '') {
-    $query = "SELECT * FROM mahasiswa WHERE nama LIKE '%$search%' OR nim LIKE '%$search%' ORDER BY id DESC";
+    $search_param = '%' . $search . '%';
+    $stmt = mysqli_prepare($conn, "SELECT * FROM mahasiswa WHERE nama LIKE ? OR nim LIKE ? ORDER BY id DESC");
+    mysqli_stmt_bind_param($stmt, "ss", $search_param, $search_param);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 } else {
-    $query = "SELECT * FROM mahasiswa ORDER BY id DESC";
+    $result = mysqli_query($conn, "SELECT * FROM mahasiswa ORDER BY id DESC");
 }
-
-$result = mysqli_query($conn, $query);
 $total  = mysqli_num_rows($result);
 
 function getPredikat($ipk) {

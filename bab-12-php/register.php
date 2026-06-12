@@ -6,9 +6,9 @@ if (isLoggedIn()) { header('Location: index.php'); exit(); }
 $errors = [];
 
 if (isset($_POST['register'])) {
-  $username = mysqli_real_escape_string($conn, $_POST['username']);
-  $email = mysqli_real_escape_string($conn, $_POST['email']);
-  $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
+  $username = trim($_POST['username']);
+  $email = trim($_POST['email']);
+  $full_name = trim($_POST['full_name']);
   $password = $_POST['password'];
   $confirm = $_POST['confirm_password'];
 
@@ -19,18 +19,23 @@ if (isset($_POST['register'])) {
   if (strlen($password) < 6) $errors[] = 'Password minimal 6 karakter';
   if ($password !== $confirm) $errors[] = 'Konfirmasi password tidak cocok';
 
-  $check = mysqli_query($conn, "SELECT id FROM users WHERE username='$username' OR email='$email'");
+  $stmt_check = mysqli_prepare($conn, "SELECT id FROM users WHERE username=? OR email=?");
+  mysqli_stmt_bind_param($stmt_check, "ss", $username, $email);
+  mysqli_stmt_execute($stmt_check);
+  $check = mysqli_stmt_get_result($stmt_check);
   if (mysqli_num_rows($check) > 0)
     $errors[] = 'Username atau email sudah terdaftar';
+  mysqli_stmt_close($stmt_check);
 
   if (empty($errors)) {
     $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO users (username, email, full_name, password)
-            VALUES ('$username','$email','$full_name','$hashed')";
-    if (mysqli_query($conn, $sql))
+    $stmt_ins = mysqli_prepare($conn, "INSERT INTO users (username, email, full_name, password) VALUES (?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt_ins, "ssss", $username, $email, $full_name, $hashed);
+    if (mysqli_stmt_execute($stmt_ins))
       $success = 'Registrasi berhasil! Silakan login.';
     else
-      $errors[] = 'Error: ' . mysqli_error($conn);
+      $errors[] = 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.';
+    mysqli_stmt_close($stmt_ins);
   }
 }
 ?>
